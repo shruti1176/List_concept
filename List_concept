@@ -1,0 +1,116 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class GroceryListManager {
+    public static void main(String[] args) {
+        ArrayList<GroceryItem> groceryList = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nGrocery List Manager");
+            System.out.println("1. Add Item to Grocery List");
+            System.out.println("2. Remove Item from Grocery List");
+            System.out.println("3. Print Current Grocery List");
+            System.out.println("4. Check if Item is on Grocery List");
+            System.out.println("5. Clear Entire Grocery List");
+            System.out.println("6. Exit");
+
+            System.out.print("Enter your choice (1-6): ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            switch (choice) {
+                case 1:
+                    addItem(groceryList, scanner);
+                    break;
+                case 2:
+                    removeItem(groceryList, scanner);
+                    break;
+                case 3:
+                    printGroceryList(groceryList);
+                    break;
+                case 4:
+                    checkItemOnList(groceryList, scanner);
+                    break;
+                case 5:
+                    clearGroceryList(groceryList);
+                    break;
+                case 6:
+                    System.out.println("Exiting Grocery List Manager. Goodbye!");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 6.");
+            }
+        }
+    }
+
+    private static void addItem(ArrayList<GroceryItem> groceryList, Scanner scanner) {
+        System.out.print("Enter the name of the item: ");
+        String itemName = scanner.nextLine();
+        System.out.print("Enter the quantity (press Enter if none): ");
+        String quantity = scanner.nextLine();
+
+        GroceryItem newItem = new GroceryItem(itemName, quantity);
+        groceryList.add(newItem);
+
+        System.out.println(itemName + " has been added to the grocery list.");
+    }
+
+    private static void removeItem(ArrayList<GroceryItem> groceryList, Scanner scanner) {
+        System.out.print("Enter the name of the item to remove: ");
+        String itemNameToRemove = scanner.nextLine();
+
+        groceryList.removeIf(item -> item.getName().equalsIgnoreCase(itemNameToRemove));
+
+        System.out.println(itemNameToRemove + " has been removed from the grocery list.");
+    }
+
+    private static void printGroceryList(ArrayList<GroceryItem> groceryList) {
+        if (groceryList.isEmpty()) {
+            System.out.println("The grocery list is empty.");
+        } else {
+            System.out.println("Current Grocery List:");
+            for (GroceryItem item : groceryList) {
+                System.out.println(item);
+            }
+        }
+    }
+
+    private static void checkItemOnList(ArrayList<GroceryItem> groceryList, Scanner scanner) {
+        System.out.print("Enter the name of the item to check: ");
+        String itemNameToCheck = scanner.nextLine();
+
+        boolean itemFound = groceryList.stream()
+                .anyMatch(item -> item.getName().equalsIgnoreCase(itemNameToCheck));
+
+        if (itemFound) {
+            System.out.println(itemNameToCheck + " is on the grocery list.");
+        } else {
+            System.out.println(itemNameToCheck + " is not on the grocery list.");
+        }
+    }
+
+    private static void clearGroceryList(ArrayList<GroceryItem> groceryList) {
+        groceryList.clear();
+        System.out.println("Grocery list has been cleared.");
+    }
+}
+
+class GroceryItem {
+    private String name;
+    private String quantity;
+
+    public GroceryItem(String name, String quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return quantity.isEmpty() ? name : name + " (Quantity: " + quantity + ")";
+    }
+}
